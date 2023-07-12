@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
+{% if code == 400 %}
 <p>Brawo pokazuje ci graf</p>
+{% elif code == 501 %}
+<p>Brawo jestes debilem</p>
+{% endif %}
+<form method="post" action="{{ url_for('index') }}">
+    <button onclick="clear_cookie()" name="forwardBtn" type="submit">Go back</button>
 {% endblock %}
 

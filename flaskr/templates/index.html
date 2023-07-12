@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<form method="post", action={{ url_for('graph.set_weights') }}>
+<form method="post" action="{{ url_for('graph.set_weights') }}">
     <label for="vertices">Give the number of vertices in the graph</label><br>
     <input type="number" min="1" name="vertices" id="vertices" placeholder="Number of vertices..." required><br>
     <label for="is_directed">Should graph be directed?</label>

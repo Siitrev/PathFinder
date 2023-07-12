@@ -24,7 +24,7 @@ def create_app(test_config=None):
     app.register_blueprint(graph.bp)
     
     
-    @app.route('/')
+    @app.route('/', methods=("GET","POST"))
     def index():
         for key in list(session.keys()):
             session.pop(key)
