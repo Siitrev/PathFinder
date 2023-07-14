@@ -5,6 +5,9 @@
 {% elif code == 501 %}
 <p>Brawo jestes debilem</p>
 {% endif %}
+
+<p>{{ code }}</p>
+<p>{{ vertic }}</p>
 <form method="post" action="{{ url_for('index') }}">
     <button onclick="clear_cookie()" name="forwardBtn" type="submit">Go back</button>
 {% endblock %}

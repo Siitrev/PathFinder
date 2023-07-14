@@ -4,19 +4,6 @@ from flaskr.algorithm import dijkstra, draw_path
 from flaskr.util import create_graph, show_all_paths, CLEAR
 
 if __name__ == "__main__":
-    
-    print("Witamy w programie wyznaczającym najkrótszą ścieżkę w grafie za pomocą algorytmu Dijkstry")
-    print("Po wczytaniu lub utworzeniu grafu zostanie zapisana jego macierz sąsiedzwa w katalogu graf w pliku .txt")
-    print("Wierzchołki będą numerowane od 0 do n-1")
-    print("Waga krawędzi nie może być ujemna")
-    print(
-        """Wczytać utworzony graf?
-        1 - Tak
-        0 - Nie"""
-    )
-    load = bool(int(input()))
-
-    os.system(CLEAR)
 
     if not load:
         G = create_graph()
