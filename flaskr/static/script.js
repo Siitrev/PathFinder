@@ -15,7 +15,7 @@ function get_cookie(cname) {
   }
 
 function clear_cookie(){
-    document.cookie = ""
+    document.cookie = " "
 }
 
 
