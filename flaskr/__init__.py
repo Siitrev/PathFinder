@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template,session
+from flask import Flask, render_template,request, make_response
 
 
 def create_app(test_config=None):
@@ -26,8 +26,9 @@ def create_app(test_config=None):
     
     @app.route('/', methods=("GET","POST"))
     def index():
-        for key in list(session.keys()):
-            session.pop(key)
-        return render_template("index.html")
+        resp = make_response( render_template("index.html"))
+        if request.method == "POST":   
+            resp.delete_cookie("edges",samesite=None,secure=True)
+        return resp
 
     return app

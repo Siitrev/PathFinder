@@ -8,9 +8,11 @@ bp = Blueprint('graph', __name__, url_prefix='/graph')
 
 @bp.route('/set_weights', methods=('GET', 'POST'))
 def set_weights():
-    if request.method == "POST":   
+    if request.method == "POST":
+           
         resp = make_response( render_template('graph_creation.html'))
-        resp.set_cookie("vertices", request.form["vertices"])
+        vertices = request.form["vertices"]
+        resp.set_cookie("vertices", vertices,samesite=None, secure=True)
             
         return resp
 

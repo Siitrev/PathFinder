@@ -15,7 +15,7 @@ function get_cookie(cname) {
   }
 
 function clear_cookie(){
-    document.cookie = " "
+    document.cookie = "edges=; SameSite=None; Secure"
 }
 
 
@@ -26,10 +26,10 @@ function add_edge(){
     if (start !== "" && end !== "" && weight !== "") {
         edges = get_cookie("edges");
         if (edges !== ""){
-            document.cookie = `edges=${edges}[${start},${end},"${weight}"],;`
+            document.cookie = `edges=${edges}[${start},${end},"${weight}"],; SameSite=None; Secure`
         }
         else{
-            document.cookie =`edges=[[${start},${end},"${weight}"],;`
+            document.cookie =`edges=[[${start},${end},"${weight}"],; SameSite=None; Secure`
         }
         
     }
