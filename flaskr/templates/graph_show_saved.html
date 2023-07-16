@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if code == 400 %}
+<p>Brawo pokazuje ci graf</p>
+{% elif code == 501 %}
+<p>Brawo jestes debilem</p>
+{% endif %}
+
+{% with messages = get_flashed_messages()  %}
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{message}}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+{{ graph }}
+<form method="post" action="{{ url_for('index') }}">
+    <button onclick="clear_cookie()" name="forwardBtn" type="submit">Go back</button>
+{% endblock %}
+

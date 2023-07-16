@@ -5,7 +5,11 @@ from flask import Flask, render_template,request, make_response
 
 def create_app(test_config=None):
     # create and configure the app
+    UPLOAD_FOLDER = "./flaskr/uploads"
     app = Flask(__name__, instance_relative_config=True)
+    
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.config.from_mapping(
         SECRET_KEY="dev"
     )
@@ -20,8 +24,10 @@ def create_app(test_config=None):
     except OSError:
         pass
     
-    from . import graph
+    from . import graph, file_handler
     app.register_blueprint(graph.bp)
+    app.register_blueprint(file_handler.bp)
+    
     
     
     @app.route('/', methods=("GET","POST"))

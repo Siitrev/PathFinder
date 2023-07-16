@@ -4,8 +4,16 @@ from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, make_response
 )
 from flaskr.util import create_graph
+from werkzeug.utils import secure_filename
+
 
 bp = Blueprint('graph', __name__, url_prefix='/graph')
+
+ALLOWED_EXTENSIONS = {"pkl", "pickle", "graphmlz"}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @bp.route('/set_weights', methods=('GET', 'POST'))
 def set_weights():
@@ -54,7 +62,53 @@ def show():
 
 @bp.route('/show_saved', methods=('GET', 'POST'))
 def show_saved():
-    pass
+    if request.method == "POST":
+        if "upload_file" not in request.files:
+            flash("No file part")
+            return redirect(request.url)
+        
+        file = request.files["upload_file"]
+        
+        if file.filename == "":
+            flash("No selected file")
+            return redirect(request.url)
+        
+        if file and allowed_file(file.filename):
+            
+            G : igraph.Graph = None
+            
+            filename = secure_filename(file.filename)
+            
+            name, ext = filename.rsplit('.', 1)
+            
+            if ext == "pkl" or ext == "pickle":
+                G = igraph.Graph.Read_Pickle(file)
+            elif ext == "graphmlz":
+                G = igraph.Graph.Read_GraphMLz(file)
+            
+            if not G.is_weighted():
+                flash("Graph isn't weighted")
+                return redirect(request.url)
+            
+            if not G.is_named():
+                G.vs["name"] = list(range(len(G.vs)))
+            
+            
+            # if graph is not None:
+            #     fig, ax = plt.subplots()
+            #     igraph.plot(graph,
+            #                 target=ax,
+            #                 vertex_label=graph.vs["name"],
+            #                 edge_label=graph.es["weight"],
+            #                 edge_color=["lightgrey"] * len(graph.es),
+            #                 layout="circle")
+            #     fig.savefig("myfile2.pdf")
+        
+            return render_template("graph_show_saved.html", graph=G)
+        
+        flash("Wrong file ext")
+    return render_template("graph_show_saved.html")
+    
             
         
 
