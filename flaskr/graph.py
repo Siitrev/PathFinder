@@ -1,7 +1,7 @@
-import igraph
+import igraph, datetime
 import matplotlib.pyplot as plt
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for, make_response
+    Blueprint, flash, redirect, render_template, request, url_for, make_response, send_from_directory, current_app
 )
 from flaskr.util import create_graph
 from werkzeug.utils import secure_filename
@@ -24,41 +24,21 @@ def set_weights():
             directed = "0"
         else:
             directed = "1"
-        resp = make_response( render_template('graph_creation.html', v = int(vertices)-1))
+        name = "graph_" + datetime.datetime.now().strftime("%d%m%Y%H%M%S")
+        resp = make_response( render_template('graph_creation.html', v = int(vertices)-1, graph_name = name))
         resp.set_cookie("vertices", vertices, samesite=None, secure=True)
         resp.set_cookie("directed", directed, samesite=None, secure=True)
             
         return resp
 
-@bp.route('/show', methods=('GET', 'POST'))
-def show():
-    code = 400
-    if request.method == "POST":
-        tmp_edges = request.cookies.get("edges", None)[:-1]
-        edges = None
-        if tmp_edges:
-            tmp_edges += "]"
-            edges = eval(tmp_edges)
-        vertices = int(request.cookies.get("vertices", None))  
-        directed = bool(int(request.cookies.get("directed", None)))      
-        
-        if edges is None:
-            # nie wiem co to sprawdz to dokladnie co robi 
-            flash("No edges")
-            return redirect(request.url)
-        else:
-            G : igraph.Graph = create_graph(n=vertices, edges=edges, directed=directed)
-            fig, ax = plt.subplots()
-            igraph.plot(G,
-                        target=ax,
-                        vertex_label=G.vs["name"],
-                        edge_label=G.es["weight"],
-                        edge_color=["lightgrey"] * len(G.es),
-                        layout="circle")
-            fig.savefig("myfile.pdf")
-            return render_template('graph_show.html', code=code, vertic = G.vs, tmp_edges=type(tmp_edges))
-            
-    return render_template('graph_show.html', code=code)
+@bp.route('/files/<filename>')
+def get_image(filename):
+    return send_from_directory("files", filename, as_attachment=True)
+
+@bp.route('/show/<name>')
+def show(name):
+    file_url = url_for('graph.get_image', filename=name + ".png")
+    return render_template('graph_show.html', graph_img = file_url)
 
 @bp.route('/show_saved', methods=('GET', 'POST'))
 def show_saved():
@@ -109,8 +89,31 @@ def show_saved():
         flash("Wrong file ext")
     return render_template("graph_show_saved.html")
     
-            
+@bp.route('/creating/<name>', methods=('GET', 'POST'))            
+def creating(name):
+    if request.method == "POST":
+        tmp_edges = request.cookies.get("edges", None)[:-1]
+        edges = None
+        if tmp_edges:
+            tmp_edges += "]"
+            edges = eval(tmp_edges)
+        vertices = int(request.cookies.get("vertices", None))  
+        directed = bool(int(request.cookies.get("directed", None)))      
         
+        if edges is None:
+            flash("No edges")
+            return redirect(request.url)
+        else:
+            G : igraph.Graph = create_graph(n=vertices, edges=edges, directed=directed)
+            igraph.plot(G,
+                        target=f"{current_app.config['UPLOAD_FOLDER']}{name}.png",
+                        vertex_label=G.vs["name"],
+                        edge_label=G.es["weight"],
+                        edge_color=["lightgrey"] * len(G.es),
+                        layout="circle")
+            return render_template("loading.html")
+    
+            
 
     
     

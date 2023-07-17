@@ -1,3 +1,5 @@
+
+
 function get_cookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);

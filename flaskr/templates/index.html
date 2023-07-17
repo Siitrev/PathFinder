@@ -9,7 +9,7 @@
 </form>
 <form method="post" action="{{ url_for('graph.show_saved') }}" enctype="multipart/form-data">
     <label for="upload_file">If you want to load existing graph select a file and click the submit button below</label><br>
-    <input type="file" name="upload_file" id="upload_file"><br>
+    <input type="file" name="upload_file" id="upload_file" accept=".pkl, .pickle, .graphmlz"><br>
     <input type="submit" value="Upload">
 </form>
 {% endblock %}

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<form id="edges_form" method="post" action="{{url_for('graph.show')}}">
+<form id="edges_form" method="post" action="{{url_for('graph.creating', name=graph_name)}}">
     <input style="width: 200px;" type="number" min="0" max="{{v}}" name="start" id="start" placeholder="Start vertex"><br>
     <input style="width: 200px;" type="number" min="0" max="{{v}}" name="end" id="end" placeholder="End vertex"><br>
     <input style="width: 200px;" type="number" min="0" name="weight" id="weight" placeholder="Weight of an edge"><br>
