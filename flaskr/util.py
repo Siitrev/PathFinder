@@ -1,6 +1,8 @@
 import igraph, os, asyncio
 from flaskr.algorithm import draw_path
 
+ALLOWED_EXTENSIONS = {"pkl", "pickle", "graphmlz"}
+
 # Funkcja odpowiedzialna za tworzenie garfu
 def create_graph(n : int, edges : list, directed : bool = False):
     weights = [w[2] for w in edges]
@@ -23,3 +25,8 @@ def show_all_paths(G: igraph.Graph, dist: list, start_v: int, prev: list):
             print(f"Odleglość z punktu {start_v} do punktu {i} wynosi {dist[i]}.")
         else:
             print(f"Nie ma ścieżki z punktu {start_v} do punktu {i}.")
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

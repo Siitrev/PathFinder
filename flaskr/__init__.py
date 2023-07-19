@@ -32,8 +32,6 @@ def create_app(test_config=None):
     @app.route('/', methods=("GET","POST"))
     def index():
         resp = make_response( render_template("index.html"))
-        if request.method == "POST":   
-            resp.delete_cookie("edges",samesite=None,secure=True)
         return resp
 
     return app

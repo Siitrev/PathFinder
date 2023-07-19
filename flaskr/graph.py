@@ -1,22 +1,20 @@
 import igraph, datetime
+import matplotlib
 import matplotlib.pyplot as plt
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, make_response, send_from_directory, current_app
 )
-from flaskr.util import create_graph
+from flaskr.util import create_graph, allowed_file
 from werkzeug.utils import secure_filename
 
-
+matplotlib.use('Agg')
 bp = Blueprint('graph', __name__, url_prefix='/graph')
 
-ALLOWED_EXTENSIONS = {"pkl", "pickle", "graphmlz"}
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @bp.route('/set_weights', methods=('GET', 'POST'))
 def set_weights():
+    name = "graph_" + datetime.datetime.now().strftime("%d%m%Y%H%M%S")
     if request.method == "POST":
         vertices = request.form["vertices"]
         directed = request.form.get("is_directed")
@@ -24,12 +22,13 @@ def set_weights():
             directed = "0"
         else:
             directed = "1"
-        name = "graph_" + datetime.datetime.now().strftime("%d%m%Y%H%M%S")
-        resp = make_response( render_template('graph_creation.html', v = int(vertices)-1, graph_name = name))
-        resp.set_cookie("vertices", vertices, samesite=None, secure=True)
-        resp.set_cookie("directed", directed, samesite=None, secure=True)
+        
+        resp = make_response( render_template('graph_creation.html', v = int(vertices)-1, graph_name = name, edges=request.cookies.get("edges")))
+        resp.set_cookie("vertices", vertices, samesite="None", secure=True, path="/")
+        resp.set_cookie("directed", directed, samesite="None", secure=True, path="/")
             
         return resp
+    return render_template('graph_creation.html', v = request.cookies.get("vertices", type=int)-1, graph_name = name,edges=request.cookies.get("edges"))
 
 @bp.route('/files/<filename>')
 def get_image(filename):
@@ -37,7 +36,9 @@ def get_image(filename):
 
 @bp.route('/show/<name>')
 def show(name):
-    file_url = url_for('graph.get_image', filename=name + ".png")
+    file_url = None
+    if name != "None":
+        file_url = url_for('graph.get_image', filename=name + ".png")
     return render_template('graph_show.html', graph_img = file_url)
 
 @bp.route('/show_saved', methods=('GET', 'POST'))
@@ -73,24 +74,14 @@ def show_saved():
             if not G.is_named():
                 G.vs["name"] = list(range(len(G.vs)))
             
-            
-            # if graph is not None:
-            #     fig, ax = plt.subplots()
-            #     igraph.plot(graph,
-            #                 target=ax,
-            #                 vertex_label=graph.vs["name"],
-            #                 edge_label=graph.es["weight"],
-            #                 edge_color=["lightgrey"] * len(graph.es),
-            #                 layout="circle")
-            #     fig.savefig("myfile2.pdf")
         
             return render_template("graph_show_saved.html", graph=G)
         
         flash("Wrong file ext")
     return render_template("graph_show_saved.html")
     
-@bp.route('/creating/<name>', methods=('GET', 'POST'))            
-def creating(name):
+@bp.route('/create/<name>', methods=('GET', 'POST'))            
+def create(name):
     if request.method == "POST":
         tmp_edges = request.cookies.get("edges", None)[:-1]
         edges = None
@@ -102,18 +93,70 @@ def creating(name):
         
         if edges is None:
             flash("No edges")
-            return redirect(request.url)
+            return redirect(url_for("graph.show",name="None"))
         else:
             G : igraph.Graph = create_graph(n=vertices, edges=edges, directed=directed)
+            fig, ax = plt.subplots(num=1,clear=True)
             igraph.plot(G,
-                        target=f"{current_app.config['UPLOAD_FOLDER']}{name}.png",
-                        vertex_label=G.vs["name"],
-                        edge_label=G.es["weight"],
-                        edge_color=["lightgrey"] * len(G.es),
-                        layout="circle")
-            return render_template("loading.html")
+                            target=ax,
+                            vertex_label=G.vs["name"],
+                            edge_label=G.es["weight"],
+                            edge_color=["lightgrey"] * len(G.es),
+                            layout="circle")
+            fig.savefig(f"{current_app.config['UPLOAD_FOLDER']}{name}.png",format="png", transparent=True)
+            fig.savefig(f"{current_app.config['UPLOAD_FOLDER']}{name}.pdf",format="pdf")
+            return render_template("load.html")
     
+@bp.route('/load', methods=('GET', 'POST'))
+def load():
+    if request.method == "POST":
+        if "upload_file" not in request.files:
+            flash("No file part")
+            return redirect(url_for("graph.show",name="None"))
+        
+        file = request.files["upload_file"]
+        
+        if file.filename == "":
+            flash("No selected file")
+            return redirect(url_for("graph.show",name="None"))
+        
+        if file and allowed_file(file.filename):
             
+            G : igraph.Graph = None
+            
+            filename = secure_filename(file.filename)
+            
+            name, ext = filename.rsplit('.', 1)
+            
+            if ext == "pkl" or ext == "pickle":
+                G = igraph.Graph.Read_Pickle(file)
+            elif ext == "graphmlz":
+                G = igraph.Graph.Read_GraphMLz(file)
+            
+            if not G.is_weighted():
+                flash("Graph isn't weighted")
+                return redirect(url_for("graph.show", name="None"))
+            
+            if not G.is_named():
+                G.vs["name"] = list(range(len(G.vs)))
+                
+            directed = "0"
+            if G.is_directed():
+                directed = "1"
+            
+            edges = str([[e.source, e.target, e["weight"]] for e in G.es])
+            edges = edges[:-1] + ','
+            
+            resp = make_response( render_template('load.html'))
+            resp.set_cookie("vertices", str(len(G.vs)), samesite="None", secure=True, path="/")
+            resp.set_cookie("directed", directed, samesite="None", secure=True, path="/")
+            resp.set_cookie("edges", edges, samesite="None", secure=True, path="/graph")
+            
+            return resp
+        
+        flash("Wrong file ext")
+        return redirect(url_for("graph.show", name="None"))
+      
 
     
     
