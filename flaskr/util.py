@@ -5,7 +5,7 @@ ALLOWED_EXTENSIONS = {"pkl", "pickle", "graphmlz"}
 
 # Funkcja odpowiedzialna za tworzenie garfu
 def create_graph(n : int, edges : list, directed : bool = False):
-    weights = [w[2] for w in edges]
+    weights = [int(w[2]) for w in edges]
     new_edges = [e[:2] for e in edges]
     G = igraph.Graph(n=n, edges=new_edges, directed=directed)
 

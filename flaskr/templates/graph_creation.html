@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-<form id="edges_form" method="post" action="{{url_for('graph.create', name=graph_name)}}">
+<form id="edges_form" method="post">
     <input style="width: 200px;" type="number" min="0" max="{{v}}" name="start" id="start" placeholder="Start vertex"><br>
     <input style="width: 200px;" type="number" min="0" max="{{v}}" name="end" id="end" placeholder="End vertex"><br>
     <input style="width: 200px;" type="number" min="0" name="weight" id="weight" placeholder="Weight of an edge"><br>
 </form>
-<button onclick="add_edge()" type="button">Add edge</button>
-<input type="submit" value="Submit" form="edges_form">
+<button onclick="add_edge('edges')" type="button">Add edge</button>
+<!-- <input type="button" value="Submit" form="edges_form"> -->
+<button onclick="send_data('{{graph_name}}')" type="button">Submit</button>
 <div class="error" id="error" style="display:none;color: red; font-weight: bolder;">ALE ZAWALILES WEZ TO POPRAW CO?? MASZ TY HONOR I GODNOSC?</div>
-<script src="{{ url_for('static', filename='fix_cookie.js') }}" type="module"></script>
-<p>{{ edges }}</p>
+<p id="info"></p>
+<script src="{{ url_for('static', filename='fix_cookie.js') }}"></script>
+<script src="{{ url_for('static', filename='send_load.js') }}"></script>
 {% endblock %}
 
