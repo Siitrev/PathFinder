@@ -1,4 +1,4 @@
-import igraph, datetime, json
+import igraph, datetime, json, math
 import matplotlib
 import matplotlib.pyplot as plt
 from flask import (
@@ -85,9 +85,10 @@ def show_saved():
 @bp.route('/create/<name>', methods=('GET', 'POST'))            
 def create(name):
     if request.method == "POST":
-        tmp_edges = request.cookies.get("edges", None)[:-1]
+        tmp_edges = request.cookies.get("edges", None)
         edges = None
         if tmp_edges:
+            tmp_edges = tmp_edges[:-1]
             tmp_edges += "]"
             edges = eval(tmp_edges)
         vertices = int(request.cookies.get("vertices", None))  
@@ -116,7 +117,9 @@ def create(name):
             
             answer = {"dist": dist, "prev":prev}
             
-            resp = make_response(json.dumps(answer),200)
+            answer["dist"] = [str(x) if x == math.inf else x for x in answer["dist"]]
+            
+            resp = make_response(json.dumps(answer), 200)
             
             return resp
     
