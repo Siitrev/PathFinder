@@ -6,11 +6,25 @@
             <p>{{message}}</p>
         {% endfor %}
     {% else %}
-        <p>Ale super graf</p>
-        <img src="{{graph_img}}" alt="Oops! There was a problem with your graph!"><br>
+        {% if graph_name != 'None'%}
+            <img src="{{ graph_img }}" alt="Oops! There was a problem with your graph!"><br>
+            <button onclick="get_path('{{graph_name}}')" id="one_path" type="button">Show path</button>
+            <button onclick="get_all_paths('{{graph_name}}')" id="all_paths" type="button">Show all paths</button>
+            <button onclick="" id="download" type="button">Download graph</button>
+            <select name="" id="">
+                <option value="png">png</option>
+                <option value="pdf">pdf</option>
+                <option value="pickle">pickle</option>
+                <option value="graphmlz">graphmlz</option>
+            </select>
+        {% endif %}
     {% endif %}
 {% endwith %}
+
 <form method="post" action="{{ url_for('index') }}">
     <button onclick="clear_cookie()" name="forwardBtn" type="submit">Go back</button>
+</form>
+<script src="{{ url_for('static', filename='get_path.js') }}""></script>
+<script src="{{ url_for('static', filename='get_all_paths.js') }}""></script>
 {% endblock %}
 

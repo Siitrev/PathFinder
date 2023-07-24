@@ -21,10 +21,7 @@ def show_all_paths(G: igraph.Graph, dist: list, start_v: int, prev: list):
     for i in range(len(dist)):
         if i == start_v:
             continue
-        if draw_path(G, start_v, i, prev):
-            print(f"Odleglość z punktu {start_v} do punktu {i} wynosi {dist[i]}.")
-        else:
-            print(f"Nie ma ścieżki z punktu {start_v} do punktu {i}.")
+        draw_path(G, start_v, i, prev)
 
 
 def allowed_file(filename):

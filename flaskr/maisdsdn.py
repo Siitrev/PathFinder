@@ -4,18 +4,6 @@ from flaskr.algorithm import dijkstra, draw_path
 from flaskr.util import create_graph, show_all_paths, CLEAR
 
 if __name__ == "__main__":
-
-    if not load:
-        G = create_graph()
-        G.write_adjacency("./graf/macierz_sasiedztwa.txt")
-    else:
-        if os.path.exists("./graf/graf.p"):
-            G = igraph.Graph.Read_Pickle("./graf/graf.p")
-        else:
-            print("Niestety, nie ma zapisanego żadnego grafu! Proszę utworzyć graf")
-            input("Wcisnij Enter aby kontynuuowac...")
-            G = create_graph()
-            G.write_adjacency("./graf/macierz_sasiedztwa.txt")
     
     print(f"Ilość wierzchołków grafu {len(G.vs)}.")       
     print("Od jakiego punktu zacząć szukanie ścieżki?")
