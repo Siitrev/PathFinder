@@ -1,4 +1,4 @@
-import igraph, datetime, json, math
+import igraph, datetime, os, shutil
 import matplotlib
 import matplotlib.pyplot as plt
 from flask import (
@@ -42,19 +42,23 @@ def set_weights():
     return render_template("graph_creation.html", v=vertices - 1, graph_name=name)
 
 
-@bp.route("/files/<filename>")
-def get_image(filename):
-    return send_from_directory("files", filename, as_attachment=True)
+@bp.route("/files/<name>/<filename>")
+def get_image(name, filename):
+    return send_from_directory(f"files/{name}", filename, as_attachment=True)
+
+
+@bp.route("/download/<filename>")
+def get_zip(filename):
+    return send_from_directory(f"download", f"{filename}.zip", as_attachment=True)
 
 
 @bp.route("/show/<name>")
 def show(name: str):
     file_url = None
     if name != "None":
-        file_url = url_for("graph.get_image", filename=name + ".png")
-    if name.endswith("_all") or name.endswith("_one"):
-        name = name[:-4]
+        file_url = url_for("graph.get_image", name=name, filename=name + ".png")
     return render_template("graph_show.html", graph_img=file_url, graph_name=name)
+
 
 @bp.route("/create/<name>", methods=("GET", "POST"))
 def create(name):
@@ -72,10 +76,23 @@ def create(name):
             flash("No edges")
             return make_response("redirect", 302)
         else:
+            if not os.path.exists(f"{current_app.config['UPLOAD_FOLDER']}{name}"):
+                os.mkdir(f"{current_app.config['UPLOAD_FOLDER']}{name}")
+
             G: igraph.Graph = create_graph(n=vertices, edges=edges, directed=directed)
-            G.write_pickle(f"{current_app.config['UPLOAD_FOLDER']}{name}.pickle")
+
+            G.write_pickle(
+                f"{current_app.config['UPLOAD_FOLDER']}/{name}/{name}.pickle"
+            )
+            G.write_graphmlz(
+                f"{current_app.config['UPLOAD_FOLDER']}/{name}/{name}.graphmlz"
+            )
+
             fig, ax = plt.subplots(num=1, clear=True)
-            fig.suptitle(f"Graph with {vertices} vertices")            
+            if vertices == 1:
+                fig.suptitle(f"Graph with {vertices} vertex.")
+            else:
+                fig.suptitle(f"Graph with {vertices} vertices.")
             igraph.plot(
                 G,
                 target=ax,
@@ -85,10 +102,64 @@ def create(name):
                 layout="circle",
             )
             fig.savefig(
-                f"{current_app.config['UPLOAD_FOLDER']}{name}.png", transparent=True
+                f"{current_app.config['UPLOAD_FOLDER']}/{name}/{name}.png",
+                transparent=True,
             )
-            
+            fig.savefig(f"{current_app.config['UPLOAD_FOLDER']}/{name}/{name}.pdf")
+
             fig.clear()
+
+            start_v = int(request.cookies.get("start_v"))
+            end_v = int(request.cookies.get("end_v"))
+
+            dist, prev = dijkstra(G, start_v=start_v)
+
+            draw_path(G, start_v, end_v, prev)
+
+            fig, ax = plt.subplots(num=1, clear=True)
+            fig.suptitle(f"Shortest path from {start_v} to {end_v} is {dist[end_v]}")
+            igraph.plot(
+                G,
+                target=ax,
+                vertex_label=G.vs["name"],
+                edge_label=G.es["weight"],
+                edge_color=["red" if e["dijkstra_path"] else "lightgrey" for e in G.es],
+                layout="circle",
+            )
+            fig.savefig(
+                f"{current_app.config['UPLOAD_FOLDER']}/{name}/{name}_one.png",
+                transparent=True,
+            )
+            fig.savefig(f"{current_app.config['UPLOAD_FOLDER']}/{name}/{name}_one.pdf")
+
+            fig.clear()
+
+            show_all_paths(G, dist, start_v, prev)
+
+            fig, ax = plt.subplots(num=1, clear=True)
+            fig.suptitle(f"Shortest paths from {start_v} to all vertices")
+            igraph.plot(
+                G,
+                target=ax,
+                vertex_label=G.vs["name"],
+                edge_label=G.es["weight"],
+                edge_color=["red" if e["dijkstra_path"] else "lightgrey" for e in G.es],
+                layout="circle",
+            )
+            fig.savefig(
+                f"{current_app.config['UPLOAD_FOLDER']}/{name}/{name}_all.png",
+                transparent=True,
+            )
+            fig.savefig(f"{current_app.config['UPLOAD_FOLDER']}/{name}/{name}_all.pdf")
+
+            fig.clear()
+
+            if not os.path.exists(f"./flaskr/download/{name}.zip"):
+                shutil.make_archive(
+                    f"./flaskr/download/{name}",
+                    "zip",
+                    f"{current_app.config['UPLOAD_FOLDER']}/{name}",
+                )
 
             resp = make_response("OK", 200)
 
@@ -148,64 +219,68 @@ def load():
 
         flash("Wrong file ext")
         return redirect(url_for("graph.show", name="None"))
-    
-@bp.route("/draw/single/<name>", methods=("GET", "POST"))
-def draw_one(name):
-    if request.method == "POST":
-        G : igraph.Graph = igraph.Graph.Read_Pickle(f"{current_app.config['UPLOAD_FOLDER']}{name}.pickle")
-        
-        start_v = int(request.cookies.get("start_v"))
-        end_v = int(request.cookies.get("end_v"))
-        
-        dist, prev = dijkstra(G, start_v=start_v)
-        
-        draw_path(G,start_v, end_v ,prev)
-        
-        fig, ax = plt.subplots(num=1, clear=True)
-        fig.suptitle(f"Shortest path from {start_v} to {end_v} is {dist[end_v]}")
-        igraph.plot(
-            G,
-            target=ax,
-            vertex_label=G.vs["name"],
-            edge_label=G.es["weight"],
-            edge_color=["red" if e["dijkstra_path"] else "lightgrey" for e in G.es],
-            layout="circle"
-        )
-        fig.savefig(
-            f"{current_app.config['UPLOAD_FOLDER']}{name}_one.png", transparent=True
-        )
-        
-        fig.clear()
-        
-        return make_response("OK", 302)
 
-@bp.route("/draw/all/<name>", methods=("GET", "POST"))
-def draw_all(name):
-    if request.method == "POST":
-        G : igraph.Graph = igraph.Graph.Read_Pickle(f"{current_app.config['UPLOAD_FOLDER']}{name}.pickle")
-        
-        start_v = int(request.cookies.get("start_v"))
-        
-        dist, prev = dijkstra(G, start_v=start_v)
-        
-        show_all_paths(G,dist,start_v,prev)
-        
-        fig, ax = plt.subplots(num=1, clear=True)
-        fig.suptitle(f"Shortest paths from {start_v} to all vertices")
-        igraph.plot(
-            G,
-            target=ax,
-            vertex_label=G.vs["name"],
-            edge_label=G.es["weight"],
-            edge_color=["red" if e["dijkstra_path"] else "lightgrey" for e in G.es],
-            layout="circle"
-        )
-        fig.savefig(
-            f"{current_app.config['UPLOAD_FOLDER']}{name}_all.png", transparent=True
-        )
-        
-        fig.clear()
-        
-        return make_response("OK", 302)
-        
-        
+
+# @bp.route("/draw/single/<name>", methods=("GET", "POST"))
+# def draw_one(name):
+#     if request.method == "POST":
+#         G: igraph.Graph = igraph.Graph.Read_Pickle(
+#             f"{current_app.config['UPLOAD_FOLDER']}{name}.pickle"
+#         )
+
+#         start_v = int(request.cookies.get("start_v"))
+#         end_v = int(request.cookies.get("end_v"))
+
+#         dist, prev = dijkstra(G, start_v=start_v)
+
+#         draw_path(G, start_v, end_v, prev)
+
+#         fig, ax = plt.subplots(num=1, clear=True)
+#         fig.suptitle(f"Shortest path from {start_v} to {end_v} is {dist[end_v]}")
+#         igraph.plot(
+#             G,
+#             target=ax,
+#             vertex_label=G.vs["name"],
+#             edge_label=G.es["weight"],
+#             edge_color=["red" if e["dijkstra_path"] else "lightgrey" for e in G.es],
+#             layout="circle",
+#         )
+#         fig.savefig(
+#             f"{current_app.config['UPLOAD_FOLDER']}{name}_one.png", transparent=True
+#         )
+
+#         fig.clear()
+
+#         return make_response("OK", 302)
+
+
+# @bp.route("/draw/all/<name>", methods=("GET", "POST"))
+# def draw_all(name):
+#     if request.method == "POST":
+#         G: igraph.Graph = igraph.Graph.Read_Pickle(
+#             f"{current_app.config['UPLOAD_FOLDER']}{name}.pickle"
+#         )
+
+#         start_v = int(request.cookies.get("start_v"))
+
+#         dist, prev = dijkstra(G, start_v=start_v)
+
+#         show_all_paths(G, dist, start_v, prev)
+
+#         fig, ax = plt.subplots(num=1, clear=True)
+#         fig.suptitle(f"Shortest paths from {start_v} to all vertices")
+#         igraph.plot(
+#             G,
+#             target=ax,
+#             vertex_label=G.vs["name"],
+#             edge_label=G.es["weight"],
+#             edge_color=["red" if e["dijkstra_path"] else "lightgrey" for e in G.es],
+#             layout="circle",
+#         )
+#         fig.savefig(
+#             f"{current_app.config['UPLOAD_FOLDER']}{name}_all.png", transparent=True
+#         )
+
+#         fig.clear()
+
+#         return make_response("OK", 302)

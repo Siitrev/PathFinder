@@ -7,10 +7,11 @@
         {% endfor %}
     {% else %}
         {% if graph_name != 'None'%}
-            <img src="{{ graph_img }}" alt="Oops! There was a problem with your graph!"><br>
-            <button onclick="get_path('{{graph_name}}')" id="one_path" type="button">Show path</button>
-            <button onclick="get_all_paths('{{graph_name}}')" id="all_paths" type="button">Show all paths</button>
-            <form method="get" action="{{ graph_img }}">
+            <img id="graph_image" src="{{ graph_img }}" alt="Oops! There was a problem with your graph!"><br>
+            <button onclick="show_path()" id="one_path" type="button">Show path</button>
+            <button onclick="show_all_paths()" id="all_paths" type="button">Show all paths</button>
+            <button onclick="reset_graph()" id="all_paths" type="button">Reset graph</button>
+            <form method="get" action="{{ url_for('graph.get_zip', filename=graph_name) }}">
                 <button type="submit">Download!</button>
              </form>             
             <select name="" id="">
@@ -26,8 +27,9 @@
 <form method="post" action="{{ url_for('index') }}">
     <button onclick="clear_cookie()" name="forwardBtn" type="submit">Go back</button>
 </form>
-<script src="{{ url_for('static', filename='get_path.js') }}""></script>
-<script src="{{ url_for('static', filename='get_all_paths.js') }}""></script>
-<script src="{{ url_for('static', filename='download_file.js') }}""></script>
+<script src="{{ url_for('static', filename='show_path.js') }}"></script>
+<script src="{{ url_for('static', filename='show_all_paths.js') }}"></script>
+<script src="{{ url_for('static', filename='download_file.js') }}"></script>
+<script src="{{ url_for('static', filename='reset_graph.js') }}"></script>
 {% endblock %}
 
