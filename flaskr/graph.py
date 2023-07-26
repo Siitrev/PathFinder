@@ -84,9 +84,6 @@ def create(name):
             G.write_pickle(
                 f"{current_app.config['UPLOAD_FOLDER']}/{name}/{name}.pickle"
             )
-            G.write_graphmlz(
-                f"{current_app.config['UPLOAD_FOLDER']}/{name}/{name}.graphmlz"
-            )
 
             fig, ax = plt.subplots(num=1, clear=True)
             if vertices == 1:
@@ -186,10 +183,7 @@ def load():
 
             _, ext = filename.rsplit(".", 1)
 
-            if ext == "pkl" or ext == "pickle":
-                G = igraph.Graph.Read_Pickle(file)
-            elif ext == "graphmlz":
-                G = igraph.Graph.Read_GraphMLz(file)
+            G = igraph.Graph.Read_Pickle(file)
 
             if not G.is_weighted():
                 flash("Graph isn't weighted")

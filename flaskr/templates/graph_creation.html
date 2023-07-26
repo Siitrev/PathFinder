@@ -9,8 +9,15 @@
 <button onclick="handle_edge('remove')" type="button">Remove edge</button>
 <!-- <input type="button" value="Submit" form="edges_form"> -->
 <button onclick="send_data('{{graph_name}}')" type="button">Submit</button>
-<div class="error" id="error" style="display:none;color: red; font-weight: bolder;">ALE ZAWALILES WEZ TO POPRAW CO?? MASZ TY HONOR I GODNOSC?</div>
-<p id="info"></p>
+<section class="error" id="error" style="display:none;color: red; font-weight: bolder;">ALE ZAWALILES WEZ TO POPRAW CO?? MASZ TY HONOR I GODNOSC?</section>
+<p id="info"></p><br>
+<button onclick="show_edges()">Show edges</button>
+<div class="edges">
+    <ol class="edges-list">
+        
+    </ol>
+</div>
+<script src="{{ url_for('static', filename='show_edges.js') }}"></script>
 <script src="{{ url_for('static', filename='fix_cookie.js') }}"></script>
 <script src="{{ url_for('static', filename='get_graph_data.js') }}"></script>
 {% endblock %}

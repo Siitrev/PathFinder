@@ -1,7 +1,7 @@
 import igraph, os, asyncio
 from flaskr.algorithm import draw_path
 
-ALLOWED_EXTENSIONS = {"pkl", "pickle", "graphmlz"}
+ALLOWED_EXTENSIONS = {"pkl", "pickle"}
 
 # Funkcja odpowiedzialna za tworzenie garfu
 def create_graph(n : int, edges : list, directed : bool = False):

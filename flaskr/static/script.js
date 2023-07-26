@@ -42,6 +42,7 @@ function handle_edge(action) {
       switch (action) {
         case "add":
           add_edge(start, end, weight, edges);
+
           break;
         case "remove":
           remove_edge(start, end, weight, edges);
@@ -72,6 +73,7 @@ function add_edge(start, end, weight, edges) {
   } else {
     document.cookie = `edges=[[${start},${end},${weight}],; SameSite=None; Secure; path=/graph;`;
   }
+  update_edges()
 }
 
 function remove_edge(start, end, weight, edges) {
@@ -80,8 +82,25 @@ function remove_edge(start, end, weight, edges) {
       formatted_edges = edges.replace(edge,"");
       if (formatted_edges == "[") formatted_edges = "";
         document.cookie = `edges=${formatted_edges}; SameSite=None; Secure; path=/graph;`;
+        update_edges()
     } else {
       throw Error("no_edges");
     }
 
+}
+
+function update_edges(){
+  let list = document.getElementsByClassName("edges-list")[0]
+  let children = list.children.length
+  for(i=0;i<children;i++){
+      list.removeChild(list.firstChild)
+  }
+  edges = get_cookie("edges");
+  edges = edges.slice(0,edges.length-1) + "]";
+  edges = JSON.parse(edges);
+  for(i=0;i<edges.length;i++){
+      li = document.createElement("li");
+      li.innerHTML = `Start vertex: ${edges[i][0]}, End vertex: ${edges[i][1]}, Weight: ${edges[i][2]}`;
+      list.appendChild(li)
+  }
 }
