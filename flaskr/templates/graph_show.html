@@ -13,13 +13,7 @@
             <button onclick="reset_graph()" id="all_paths" type="button">Reset graph</button>
             <form method="get" action="{{ url_for('graph.get_zip', filename=graph_name) }}">
                 <button type="submit">Download!</button>
-             </form>             
-            <select name="" id="">
-                <option value="png">png</option>
-                <option value="pdf">pdf</option>
-                <option value="pickle">pickle</option>
-                <option value="graphmlz">graphmlz</option>
-            </select>
+            </form>             
         {% endif %}
     {% endif %}
 {% endwith %}

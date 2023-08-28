@@ -1,16 +1,38 @@
 {% extends 'base.html' %}
 {% block content %}
-<form method="post" action="{{ url_for('graph.set_weights') }}">
-    <label for="vertices">Give the number of vertices in the graph</label><br>
-    <input type="number" min="1" name="vertices" id="vertices" placeholder="Number of vertices..." required><br>
-    <label for="is_directed">Should graph be directed?</label>
-    <input type="checkbox" name="is_directed" id="is_directed"><br>
-    <input type="submit" value="Submit">
-</form>
-<form method="post" action="{{ url_for('graph.load') }}" enctype="multipart/form-data">
-    <label for="upload_file">If you want to load existing graph select a file and click the submit button below</label><br>
-    <input type="file" name="upload_file" id="upload_file" accept=".pkl, .pickle"><br>
-    <input type="submit" value="Upload">
-</form>
+<div class="row" style="max-width: fit-content;">
+    <form method="post" action="{{ url_for('graph.set_weights') }}" class="form-horizontal mb-3">
+        <div class="input-group">
+            <div class="col-lg-2">
+                <label for="vertices" class="form-label pt-2 pb-2 ">Vertices:</label> 
+            </div>   
+            <div class="col-lg-6">
+                <input type="number" min="1" name="vertices" class="form-control" id="vertices" placeholder="Enter amount of vertices" required>
+            </div>
+        </div>
+        <div class="input-group d-flex justify-content-center">    
+            <div class="col-lg-8">
+                <div class="form-check">
+                    <label class="form-check-label" for="is_directed">Should the graph be directed?</label>
+                    <input class="form-check-input" type="checkbox" name="is_directed" id="is_directed" >
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="form-group d-flex justify-content-center"> 
+                <button class="btn btn-primary w-25" type="submit">Submit</button>   
+            </div>
+        </div>
+    </form>
+    <form method="post" action="{{ url_for('graph.load') }}" enctype="multipart/form-data" class="form-horizontal">
+        <div class="col-lg-8">
+            <div class="input-group">
+                <input type="file" class="form-control" name="upload_file" id="inputGroupFile02" accept=".pkl, .pickle">
+                <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">Upload</button>  
+            </div>
+        </div>
+    </form>
+</div>
+
 {% endblock %}
         
