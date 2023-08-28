@@ -7,12 +7,8 @@ input[type=number]{
     -moz-appearance: textfield;
 }
 .edges{
-    visibility: hidden;
     overflow-x: hidden;
     overflow-y: scroll;
-    height: fit-content;
-    max-height: 30vh;
-    min-height: 30vh;
-    width: 20vw;
-    background-color: cornsilk;
+    max-height: 40vh;
+    min-height: 40vh;
 }

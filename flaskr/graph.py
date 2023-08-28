@@ -73,7 +73,7 @@ def create(name):
         directed = bool(int(request.cookies.get("directed", None)))
 
         if edges is None:
-            flash("No edges")
+            flash("The graph must have edges")
             return make_response("redirect", 302)
         else:
             if not os.path.exists(f"{current_app.config['UPLOAD_FOLDER']}{name}"):
@@ -167,14 +167,14 @@ def create(name):
 def load():
     if request.method == "POST":
         if "upload_file" not in request.files:
-            flash("No file part")
-            return redirect(url_for("graph.show", name="None"))
+            flash("There is no file attached")
+            return redirect(url_for("index"))
 
         file = request.files["upload_file"]
 
         if file.filename == "":
-            flash("No selected file")
-            return redirect(url_for("graph.show", name="None"))
+            flash("The file is unnamed")
+            return redirect(url_for("index"))
 
         if file and allowed_file(file.filename):
             G: igraph.Graph = None
@@ -187,7 +187,7 @@ def load():
 
             if not G.is_weighted():
                 flash("Graph isn't weighted")
-                return redirect(url_for("graph.show", name="None"))
+                return redirect(url_for("index"))
 
             if not G.is_named():
                 G.vs["name"] = list(range(len(G.vs)))
@@ -211,8 +211,8 @@ def load():
 
             return resp
 
-        flash("Wrong file ext")
-        return redirect(url_for("graph.show", name="None"))
+        flash("Extension of a file is wrong (should be .pickle or .pkl)")
+        return redirect(url_for("index"))
 
 
 # @bp.route("/draw/single/<name>", methods=("GET", "POST"))

@@ -22,7 +22,7 @@ function send_data(graph_name){
             document.location.href = `/graph/show/${graph_name}`;
         }
         else if (this.readyState == 4 && this.status == 302){
-            document.location.href = `/graph/show/None`;
+            document.location.href = `/graph/set_weights`;
         }
     }
     xhttp.open("POST",`/graph/create/${graph_name}`);

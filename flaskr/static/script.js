@@ -37,12 +37,9 @@ function handle_edge(action) {
       )
         throw Error("data_range");
 
-      error_block.style.display = "none";
-
       switch (action) {
         case "add":
           add_edge(start, end, weight, edges);
-
           break;
         case "remove":
           remove_edge(start, end, weight, edges);
@@ -52,17 +49,55 @@ function handle_edge(action) {
       throw Error("not_numbers");
     }
   } catch (err) {
-    error_block.style.display = "block";
+    error_info = document.createElement("div");
+    error_info.setAttribute("class","alert alert-warning alert-dismissible fade show");
+    error_info.setAttribute("role","alert");
+
+    error_close_btn = document.createElement("button");
+    error_close_btn.setAttribute("type","button");
+    error_close_btn.setAttribute("class","btn-close");
+    error_close_btn.setAttribute("data-bs-dismiss","alert");
+    error_close_btn.setAttribute("aria-label","Close");
+
+    error_details = document.createElement("div");
+    error_details.setAttribute("class","d-flex justify-content-between align-items-center");
+
+    error_msg = document.createElement("strong");
+
+    error_counter = document.createElement("span");
+    error_counter.setAttribute("class","badge bg-primary rounded-pill d-none");
+    error_counter.setAttribute("id",err.message);
+    error_counter.innerHTML = "1";
+
     switch (err.message) {
       case "not_numbers":
-        error_block.innerHTML = `Data passed through form should only consist of numbers!`;
+        error_msg.innerHTML = `Data passed through form should only consist of numbers!`;
         break;
       case "data_range":
-        error_block.innerHTML = `Vertex should be a number from 0 to ${vertices} and weight should be more or equal 0!`;
+        error_msg.innerHTML = `Vertex should be a number from 0 to ${vertices} and weight should be more or equal 0!`;
         break;
       case "no_edges":
-        error_block.innerHTML = `There are no more edges!`;
+        error_msg.innerHTML = `There are no more edges to remove!`;
         break;
+      case "edge_not_exist":
+        error_msg.innerHTML = `Edge with given parameters doesn't exist!`;
+        break;
+    }
+    
+    error_details.appendChild(error_msg);
+    error_details.appendChild(error_counter);
+    
+    error_msg_exist = document.getElementById(err.message)
+    if (error_msg_exist != null){
+      amount = parseInt(error_msg_exist.innerHTML);
+      amount++;
+      error_msg_exist.setAttribute("class","badge bg-primary rounded-pill");
+      error_msg_exist.innerHTML = amount;
+    }
+    else{
+      error_info.appendChild(error_details);
+      error_info.appendChild(error_close_btn);
+      error_block.append(error_info);
     }
   }
 }
@@ -80,7 +115,7 @@ function remove_edge(start, end, weight, edges) {
     if (edges !== "") {
       edge = `[${start},${end},${weight}],`;
       formatted_edges = edges.replace(edge,"");
-      if (formatted_edges == "[") formatted_edges = "";
+      if (formatted_edges == "[") {formatted_edges = ""};
         document.cookie = `edges=${formatted_edges}; SameSite=None; Secure; path=/graph;`;
         update_edges()
     } else {
@@ -90,17 +125,37 @@ function remove_edge(start, end, weight, edges) {
 }
 
 function update_edges(){
-  let list = document.getElementsByClassName("edges-list")[0]
+  let list = document.getElementById("edges-list")
   let children = list.children.length
   for(i=0;i<children;i++){
       list.removeChild(list.firstChild)
   }
   edges = get_cookie("edges");
+  if (edges === ""){
+    return;
+  }
   edges = edges.slice(0,edges.length-1) + "]";
   edges = JSON.parse(edges);
+  counter = 1;
   for(i=0;i<edges.length;i++){
+      h2 = document.createElement("h2");
+      h2.innerHTML = `${counter}. Edge`;
+      details = document.createElement("div");
+      details.setAttribute("class","d-flex justify-content-between");
+      p = document.createElement("p");
+      p.innerHTML = `Start vertex: ${edges[i][0]}`;
+      details.appendChild(p)
+      p = document.createElement("p");
+      p.innerHTML = `End vertex: ${edges[i][1]}`;
+      details.appendChild(p)
+      p = document.createElement("p");
+      p.innerHTML = `Weight: ${edges[i][2]}`;
+      details.appendChild(p)
       li = document.createElement("li");
-      li.innerHTML = `Start vertex: ${edges[i][0]}, End vertex: ${edges[i][1]}, Weight: ${edges[i][2]}`;
+      li.appendChild(h2)
+      li.appendChild(details)
+      li.setAttribute("class","list-group-item d-flex flex-column justify-content-center w-100");
       list.appendChild(li)
+      counter++;
   }
 }
