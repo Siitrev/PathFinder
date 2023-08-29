@@ -3,14 +3,15 @@
 <div class="container-md h-100">
     <div class="row justify-content-center align-items-center h-100">
         <div class="col-md-6">
-            <form method="post" action="{{ url_for('graph.set_weights') }}" class="form-horizontal mb-3">
+            <form method="post" action="{{ url_for('graph.set_weights') }}" class="form-horizontal mb-3 text-center">
                 <input type="number" min="1" name="vertices" class="form-control" id="vertices" placeholder="Enter amount of vertices" required>
-                <div class="form-check">
+                <div class="d-flex justify-content-center">
+                    <input class="form-check-input me-2" type="checkbox" name="is_directed" id="is_directed" >
                     <label class="form-check-label" for="is_directed">Should the graph be directed?</label>
-                    <input class="form-check-input" type="checkbox" name="is_directed" id="is_directed" >
                 </div>
-                <button class="btn btn-primary w-25" type="submit">Submit</button>   
+                <button class="btn btn-primary w-25" onclick="clear_cookie('edges','/graph')" type="submit">Submit</button>   
             </form>
+            <p class="fs-6 text fw-bold">Already have a graph? Upload it below:</p>
             <form method="post" action="{{ url_for('graph.load') }}" enctype="multipart/form-data" class="form-horizontal">
                 <div class="input-group">
                     <input type="file" class="form-control" name="upload_file" id="inputGroupFile02" accept=".pkl, .pickle">
@@ -31,6 +32,5 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
         

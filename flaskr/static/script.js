@@ -1,5 +1,5 @@
-function clear_cookie(name) {
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=None; Secure; path=/graph;`;
+function clear_cookie(name, path) {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=None; Secure; path=${path};`;
 }
 
 function get_cookie(cname) {
@@ -126,10 +126,7 @@ function remove_edge(start, end, weight, edges) {
 
 function update_edges(){
   let list = document.getElementById("edges-list")
-  let children = list.children.length
-  for(i=0;i<children;i++){
-      list.removeChild(list.firstChild)
-  }
+  list.innerHTML = ""
   edges = get_cookie("edges");
   if (edges === ""){
     return;

@@ -1,3 +1,3 @@
-document.addEventListener("DOMContentLoaded",_ =>{
-    update_edges()
+document.getElementById("flush-headingOne").addEventListener("click",_=>{
+    update_edges();
 })

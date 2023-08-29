@@ -74,7 +74,7 @@ def create(name):
 
         if edges is None:
             flash("The graph must have edges")
-            return make_response("redirect", 302)
+            return redirect(url_for("graph.set_weights"))
         else:
             if not os.path.exists(f"{current_app.config['UPLOAD_FOLDER']}{name}"):
                 os.mkdir(f"{current_app.config['UPLOAD_FOLDER']}{name}")
@@ -106,8 +106,8 @@ def create(name):
 
             fig.clear()
 
-            start_v = int(request.cookies.get("start_v"))
-            end_v = int(request.cookies.get("end_v"))
+            start_v = int(request.form["path_start"])
+            end_v = int(request.form["path_end"])
 
             dist, prev = dijkstra(G, start_v=start_v)
 
@@ -158,9 +158,7 @@ def create(name):
                     f"{current_app.config['UPLOAD_FOLDER']}/{name}",
                 )
 
-            resp = make_response("OK", 200)
-
-            return resp
+            return redirect(url_for("graph.show",name=name))
 
 
 @bp.route("/load", methods=("GET", "POST"))
@@ -173,7 +171,7 @@ def load():
         file = request.files["upload_file"]
 
         if file.filename == "":
-            flash("The file is unnamed")
+            flash("There is no file attached")
             return redirect(url_for("index"))
 
         if file and allowed_file(file.filename):

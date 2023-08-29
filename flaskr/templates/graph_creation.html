@@ -4,14 +4,14 @@
     <div class="row justify-content-center align-items-center h-100">
         <div class="col-md-6 text-center">
             <form id="edges_form" method="post" class="d-flex flex-column justify-content-center align-items-center">
-                <input class="form-control w-25 mt-3 mb-2" type="number" min="0" max="{{v}}" name="start" id="start" placeholder="Start vertex"><br>
-                <input class="form-control w-25 mt-1 mb-2" type="number" min="0" max="{{v}}" name="end" id="end" placeholder="End vertex"><br>
-                <input class="form-control w-25 mt-1 mb-3" type="number" min="0" name="weight" id="weight" placeholder="Weight"><br>
+                <input class="form-control w-25 mt-3 mb-2" type="number" min="0" max="{{v}}" name="start" id="start" placeholder="Start vertex">
+                <input class="form-control w-25 mt-1 mb-2" type="number" min="0" max="{{v}}" name="end" id="end" placeholder="End vertex">
+                <input class="form-control w-25 mt-1 mb-3" type="number" min="0" name="weight" id="weight" placeholder="Weight">
             </form>
             <div class="btn-group" role="group" aria-label="Control-buttons">
                 <button class="btn btn-primary" onclick="handle_edge('add')" type="button">Add edge</button>
                 <button class="btn btn-primary" onclick="handle_edge('remove')" type="button">Remove edge</button>
-                <button class="btn btn-primary" onclick="send_data('{{graph_name}}')" type="button">Submit</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Submit</button>                  
             </div>
             <section id="error" class="my-4"></section>
             {% with messages = get_flashed_messages()  %}
@@ -43,9 +43,35 @@
             </div>   
         </div>
     </div>
-</div>    
+</div>
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Path details</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="path_details" method="post" action="{{ url_for('graph.create', name=graph_name) }}">
+            <p class="fs-5">Please, enter starting and ending vertex of a path.</p>
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">Start vertex: </span>
+                <input class="form-control" type="number" min="0" max="{{v}}" name="path_start" id="path_start" required>
+            </div>
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">End vertex: </span>
+                <input class="form-control" type="number" min="0" max="{{v}}" name="path_end" id="path_end" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" form="path_details">Create graph</button>
+        </div>
+      </div>
+    </div>
+</div>  
 <script src="{{ url_for('static', filename='show_edges.js') }}"></script>
 <script src="{{ url_for('static', filename='fix_cookie.js') }}"></script>
-<script src="{{ url_for('static', filename='get_graph_data.js') }}"></script>
 {% endblock %}
 

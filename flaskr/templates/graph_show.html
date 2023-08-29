@@ -1,29 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
-{% with messages = get_flashed_messages()  %}
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{message}}</p>
-        {% endfor %}
-    {% else %}
-        {% if graph_name != 'None'%}
+<div class="container-md h-100">
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col-md-6 text-center">
             <img id="graph_image" src="{{ graph_img }}" alt="Oops! There was a problem with your graph!"><br>
-            <button onclick="show_path()" id="one_path" type="button">Show path</button>
-            <button onclick="show_all_paths()" id="all_paths" type="button">Show all paths</button>
-            <button onclick="reset_graph()" id="all_paths" type="button">Reset graph</button>
+            <div class="btn-group my-3" role="group" aria-label="Graph control buttons">
+                
+            </div>
             <form method="get" action="{{ url_for('graph.get_zip', filename=graph_name) }}">
-                <button type="submit">Download!</button>
+                <div class="btn-group-vertical">
+                    <button class="btn btn-primary" onclick="show_path()" id="one_path" type="button">Show path</button>
+                    <button class="btn btn-primary" onclick="show_all_paths()" id="all_paths" type="button">Show all paths</button>
+                    <button class="btn btn-danger" onclick="reset_graph()" id="all_paths" type="button">Reset graph</button>
+                    <button class="btn btn-success" type="submit">Download!</button>
+                    <button class="btn btn-secondary" formaction="{{ url_for('index') }}" onclick="clear_cookie('edges','/graph')" type="submit">Go back</button>
+                </div>
             </form>             
-        {% endif %}
-    {% endif %}
-{% endwith %}
-
-<form method="post" action="{{ url_for('index') }}">
-    <button onclick="clear_cookie()" name="forwardBtn" type="submit">Go back</button>
-</form>
+        </div>
+    </div>
+</div>
 <script src="{{ url_for('static', filename='show_path.js') }}"></script>
 <script src="{{ url_for('static', filename='show_all_paths.js') }}"></script>
-<script src="{{ url_for('static', filename='download_file.js') }}"></script>
 <script src="{{ url_for('static', filename='reset_graph.js') }}"></script>
 {% endblock %}
 

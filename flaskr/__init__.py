@@ -31,6 +31,8 @@ def create_app(test_config=None):
     
     @app.route('/', methods=("GET","POST"))
     def index():
+        if request.method == "POST":
+            request.cookies.clear()
         resp = make_response( render_template("index.html"))
         return resp
 
