@@ -212,7 +212,6 @@ def load():
         flash("Extension of a file is wrong (should be .pickle or .pkl)")
         return redirect(url_for("index"))
 
-
 # @bp.route("/draw/single/<name>", methods=("GET", "POST"))
 # def draw_one(name):
 #     if request.method == "POST":
