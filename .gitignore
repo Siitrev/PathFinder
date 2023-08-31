@@ -8,5 +8,5 @@ PathFinder/files/*
 PathFinder/download/*
 Spacefile
 .space
-instancecorn
+instance
 ./test.pickle
