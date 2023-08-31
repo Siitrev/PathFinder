@@ -22,7 +22,7 @@ def create_app(test_config=None):
     app.register_blueprint(graph.bp)
     
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=remove_files, trigger="interval", seconds=10)
+    scheduler.add_job(func=remove_files, trigger="interval", seconds=600)
     scheduler.start()
     
     atexit.register(lambda: scheduler.shutdown())
@@ -38,13 +38,17 @@ def create_app(test_config=None):
 
 
 def remove_files():
+    if not os.path.exists("./PathFinder/download/"):
+        return
+    
     current_time = datetime.datetime.now()
+    
     for i in os.listdir("./PathFinder/download"):
         file_creation_time = os.path.getctime(f"./PathFinder/download/{i}")
         file_creation_date = time.ctime(file_creation_time)
         file_creation_datetime = datetime.datetime.strptime(file_creation_date,"%a %b %d %H:%M:%S %Y")
         time_delta : datetime.timedelta = current_time-file_creation_datetime
-        if time_delta.seconds >= 0:
+        if time_delta.seconds >= 600:
             shutil.rmtree(f"./PathFinder/files/{i[:-4]}", ignore_errors=True)
             logging.info(f"Removed folder: {i[:-4]}")
             os.remove(f"./PathFinder/download/{i}")
