@@ -13,7 +13,7 @@
                     <button class="btn btn-primary" onclick="show_all_paths()" id="all_paths" type="button">Show all paths</button>
                     <button class="btn btn-danger" onclick="reset_graph()" id="all_paths" type="button">Reset graph</button>
                     <button class="btn btn-success" type="submit">Download!</button>
-                    <button class="btn btn-secondary" formaction="{{ url_for('index') }}" onclick="clear_cookie('edges','/graph')" type="submit">Go back</button>
+                    <button class="btn btn-secondary" formaction="{{ url_for('index') }}" onclick="clear_cookie('edges','/graph')" type="submit" id="go_back">Go back</button>
                 </div>
             </form>             
         </div>
@@ -22,5 +22,6 @@
 <script src="{{ url_for('static', filename='show_path.js') }}"></script>
 <script src="{{ url_for('static', filename='show_all_paths.js') }}"></script>
 <script src="{{ url_for('static', filename='reset_graph.js') }}"></script>
+<script src="{{ url_for('static', filename='exit_show.js') }}"></script>
 {% endblock %}
 
