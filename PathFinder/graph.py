@@ -76,6 +76,13 @@ def create(name):
             flash("The graph must have edges")
             return redirect(url_for("graph.set_weights"))
         else:
+            
+            if not os.path.exists(f"{current_app.config['UPLOAD_FOLDER']}"):
+                os.mkdir(f"{current_app.config['UPLOAD_FOLDER']}")
+        
+            if not os.path.exists("./PathFinder/download/"):
+                os.mkdir("./PathFinder/download/")
+        
             if not os.path.exists(f"{current_app.config['UPLOAD_FOLDER']}{name}"):
                 os.mkdir(f"{current_app.config['UPLOAD_FOLDER']}{name}")
 

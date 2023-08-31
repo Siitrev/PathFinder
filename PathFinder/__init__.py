@@ -10,12 +10,6 @@ def create_app(test_config=None):
     
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    
-    if not os.path.exists(f"{app.config['UPLOAD_FOLDER']}"):
-        os.mkdir(f"{app.config['UPLOAD_FOLDER']}")
-        
-    if not os.path.exists("./PathFinder/download/"):
-        os.mkdir("./PathFinder/download/")
         
     try:
         os.makedirs(app.instance_path)
