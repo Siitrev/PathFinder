@@ -22,7 +22,7 @@ def create_app(test_config=None):
     app.register_blueprint(graph.bp)
     
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=print_date_time, trigger="interval", seconds=10)
+    scheduler.add_job(func=remove_files, trigger="interval", seconds=10)
     scheduler.start()
     
     atexit.register(lambda: scheduler.shutdown())
@@ -37,7 +37,7 @@ def create_app(test_config=None):
     return app
 
 
-def print_date_time():
+def remove_files():
     current_time = datetime.datetime.now()
     for i in os.listdir("./PathFinder/download"):
         file_creation_time = os.path.getctime(f"./PathFinder/download/{i}")
