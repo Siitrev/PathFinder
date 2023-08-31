@@ -9,4 +9,4 @@ PathFinder/download/*
 Spacefile
 .space
 instancecorn
-test.pickle
+./test.pickle
