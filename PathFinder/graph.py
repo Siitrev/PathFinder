@@ -12,8 +12,8 @@ from flask import (
     send_from_directory,
     current_app,
 )
-from flaskr.util import create_graph, allowed_file, show_all_paths
-from flaskr.algorithm import dijkstra, draw_path
+from PathFinder.util import create_graph, allowed_file, show_all_paths
+from PathFinder.algorithm import dijkstra, draw_path
 from werkzeug.utils import secure_filename
 
 matplotlib.use("Agg")
@@ -151,9 +151,9 @@ def create(name):
 
             fig.clear()
 
-            if not os.path.exists(f"./flaskr/download/{name}.zip"):
+            if not os.path.exists(f"./PathFinder/download/{name}.zip"):
                 shutil.make_archive(
-                    f"./flaskr/download/{name}",
+                    f"./PathFinder/download/{name}",
                     "zip",
                     f"{current_app.config['UPLOAD_FOLDER']}/{name}",
                 )

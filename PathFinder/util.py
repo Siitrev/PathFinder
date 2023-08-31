@@ -1,5 +1,5 @@
 import igraph, os, asyncio
-from flaskr.algorithm import draw_path
+from PathFinder.algorithm import draw_path
 
 ALLOWED_EXTENSIONS = {"pkl", "pickle"}
 
