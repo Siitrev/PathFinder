@@ -3,17 +3,17 @@
 <div class="container-md h-100">
     <div class="row justify-content-center align-items-center h-100">
         <div class="col-md-6 text-center">
-            <img id="graph_image" src="{{ graph_img }}" alt="Oops! There was a problem with your graph!"><br>
+            <img id="graph_image" class="img-fluid" src="{{ graph_img }}" alt="Oops! There was a problem with your graph!"><br>
             <div class="btn-group my-3" role="group" aria-label="Graph control buttons">
                 
             </div>
             <form method="get" action="{{ url_for('graph.get_zip', filename=graph_name) }}">
                 <div class="btn-group-vertical">
-                    <button class="btn btn-primary" onclick="show_path()" id="one_path" type="button">Show path</button>
-                    <button class="btn btn-primary" onclick="show_all_paths()" id="all_paths" type="button">Show all paths</button>
-                    <button class="btn btn-danger" onclick="reset_graph()" id="all_paths" type="button">Reset graph</button>
-                    <button class="btn btn-success" type="submit">Download!</button>
-                    <button class="btn btn-secondary" formaction="{{ url_for('index') }}" onclick="clear_cookie('edges','/graph')" type="submit" id="go_back">Go back</button>
+                    <button class="btn btn-primary btn-sm" onclick="show_path()" id="one_path" type="button">Show path</button>
+                    <button class="btn btn-primary btn-sm" onclick="show_all_paths()" id="all_paths" type="button">Show all paths</button>
+                    <button class="btn btn-danger btn-sm" onclick="reset_graph()" id="all_paths" type="button">Reset graph</button>
+                    <button class="btn btn-success btn-sm" type="submit">Download!</button>
+                    <button class="btn btn-secondary btn-sm" formaction="{{ url_for('index') }}" onclick="clear_cookie('edges','/graph')" type="submit" id="go_back">Go back</button>
                 </div>
             </form>             
         </div>
