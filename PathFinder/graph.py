@@ -77,7 +77,6 @@ def show(name: str):
 def create(name):
     # check request method
     if request.method == "POST":
-        
         # read data about edges
         tmp_edges = request.cookies.get("edges", None)
         edges = None
@@ -119,15 +118,18 @@ def create(name):
             # create visualization of a graph
             fig, ax = plt.subplots(num=1, clear=True)
             if vertices == 1:
-                fig.suptitle(f"Graph with {vertices} vertex.")
+                fig.suptitle(f"Graph with {vertices} vertex.",color="#F08E32")
             else:
-                fig.suptitle(f"Graph with {vertices} vertices.")
+                fig.suptitle(f"Graph with {vertices} vertices.",color="#F08E32")
             igraph.plot(
                 G,
                 target=ax,
                 vertex_label=G.vs["name"],
+                vertex_color=["#F08E32"] * len(G.vs),
                 edge_label=G.es["weight"],
-                edge_color=["lightgrey"] * len(G.es),
+                edge_color=["#948272"] * len(G.es),
+                edge_label_color=["#B5F0FF"] * len(G.es),
+                edge_align_label=[True] * len(G.es),
                 layout="circle",
             )
             
@@ -152,13 +154,16 @@ def create(name):
 
             # create visualization of a graph with a path marked
             fig, ax = plt.subplots(num=1, clear=True)
-            fig.suptitle(f"Shortest path from {start_v} to {end_v} is {dist[end_v]}")
+            fig.suptitle(f"Shortest path from {start_v} to {end_v} is {dist[end_v]}", color="#F08E32")
             igraph.plot(
                 G,
                 target=ax,
                 vertex_label=G.vs["name"],
+                vertex_color=["#F08E32"] * len(G.vs),
                 edge_label=G.es["weight"],
-                edge_color=["red" if e["dijkstra_path"] else "lightgrey" for e in G.es],
+                edge_label_color=["#B5F0FF"] * len(G.es),
+                edge_color=["#F08E32" if e["dijkstra_path"] else "#948272" for e in G.es],
+                edge_align_label=[True] * len(G.es),
                 layout="circle",
             )
             
@@ -176,13 +181,16 @@ def create(name):
 
             # create visualization of a graph with a all paths marked
             fig, ax = plt.subplots(num=1, clear=True)
-            fig.suptitle(f"Shortest paths from {start_v} to all vertices")
+            fig.suptitle(f"Shortest paths from {start_v} to all vertices",color="#F08E32")
             igraph.plot(
                 G,
                 target=ax,
                 vertex_label=G.vs["name"],
+                vertex_color=["#F08E32"] * len(G.vs),
                 edge_label=G.es["weight"],
-                edge_color=["red" if e["dijkstra_path"] else "lightgrey" for e in G.es],
+                edge_color=["#F08E32" if e["dijkstra_path"] else "#948272" for e in G.es],
+                edge_align_label=[True] * len(G.es),
+                edge_label_color=["#B5F0FF"] * len(G.es),
                 layout="circle",
             )
             # create visualization of a graph with a all paths, as png and pdf

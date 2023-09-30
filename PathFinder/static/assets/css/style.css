@@ -8,7 +8,17 @@ input[type=number]{
 }
 .edges{
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     max-height: 40vh;
     min-height: 40vh;
+}
+.form-control::placeholder{
+    color: #DADFE0;
+    opacity: 0.7;
+}
+.h-85{
+    height: 85%;
+}
+.h-15{
+    height: 15%;
 }

@@ -91,7 +91,7 @@ function handle_edge(action) {
     if (error_msg_exist != null){
       amount = parseInt(error_msg_exist.innerHTML);
       amount++;
-      error_msg_exist.setAttribute("class","badge bg-primary rounded-pill");
+      error_msg_exist.setAttribute("class","badge bg-light-brown rounded-pill");
       error_msg_exist.innerHTML = amount;
     }
     else{
@@ -138,7 +138,7 @@ function update_edges(){
       h2 = document.createElement("h2");
       h2.innerHTML = `${counter}. Edge`;
       details = document.createElement("div");
-      details.setAttribute("class","d-flex justify-content-between");
+      details.setAttribute("class","d-flex flex-column flex-md-row text-new-primary justify-content-md-between");
       p = document.createElement("p");
       p.innerHTML = `Start vertex: ${edges[i][0]}`;
       details.appendChild(p)
@@ -151,7 +151,7 @@ function update_edges(){
       li = document.createElement("li");
       li.appendChild(h2)
       li.appendChild(details)
-      li.setAttribute("class","list-group-item d-flex flex-column justify-content-center w-100");
+      li.setAttribute("class","text-new-primary list-group-item d-flex flex-column justify-content-center w-100 bg-light-brown border-dark-brown");
       list.appendChild(li)
       counter++;
   }
