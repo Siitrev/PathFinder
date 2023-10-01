@@ -50,7 +50,7 @@ function handle_edge(action) {
     }
   } catch (err) {
     error_info = document.createElement("div");
-    error_info.setAttribute("class","alert alert-warning alert-dismissible fade show");
+    error_info.setAttribute("class","fs-sm alert alert-warning alert-dismissible fade show");
     error_info.setAttribute("role","alert");
 
     error_close_btn = document.createElement("button");
@@ -90,7 +90,9 @@ function handle_edge(action) {
     error_msg_exist = document.getElementById(err.message)
     if (error_msg_exist != null){
       amount = parseInt(error_msg_exist.innerHTML);
-      amount++;
+      if (amount < 99){
+        amount++;
+      }
       error_msg_exist.setAttribute("class","badge bg-light-brown rounded-pill");
       error_msg_exist.innerHTML = amount;
     }
@@ -138,7 +140,7 @@ function update_edges(){
       h2 = document.createElement("h2");
       h2.innerHTML = `${counter}. Edge`;
       details = document.createElement("div");
-      details.setAttribute("class","d-flex flex-column flex-md-row text-new-primary justify-content-md-between");
+      details.setAttribute("class","d-flex flex-column flex-md-row text-light-blue justify-content-md-between");
       p = document.createElement("p");
       p.innerHTML = `Start vertex: ${edges[i][0]}`;
       details.appendChild(p)
@@ -151,7 +153,7 @@ function update_edges(){
       li = document.createElement("li");
       li.appendChild(h2)
       li.appendChild(details)
-      li.setAttribute("class","text-new-primary list-group-item d-flex flex-column justify-content-center w-100 bg-light-brown border-dark-brown");
+      li.setAttribute("class","text-light-blue list-group-item d-flex flex-column justify-content-center w-100 bg-new-secondary border-new-orange");
       list.appendChild(li)
       counter++;
   }

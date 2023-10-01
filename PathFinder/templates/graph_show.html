@@ -9,12 +9,23 @@
     <div class="row justify-content-center align-items-center h-50">
         <div class="col-md-6 text-center">
             <form method="get" action="{{ url_for('graph.get_zip', filename=graph_name) }}">
-                <div class="btn-group-vertical" role="group" aria-label="Graph control buttons">
-                    <button class="btn btn-new-orange text-new-secondary btn-sm" onclick="show_path()" id="one_path" type="button">Show path</button>
-                    <button class="btn btn-new-orange text-new-secondary btn-sm" onclick="show_all_paths()" id="all_paths" type="button">Show all paths</button>
-                    <button class="btn btn-new-orange text-new-secondary btn-sm" onclick="reset_graph()" id="all_paths" type="button">Reset graph</button>
-                    <button class="btn btn-new-orange text-new-secondary btn-sm" type="submit">Download!</button>
-                    <button class="btn btn-new-orange text-new-secondary btn-sm" formaction="{{ url_for('index') }}" onclick="clear_cookie('edges','/graph')" type="submit" id="go_back">Go back</button>
+                <div class="d-block d-md-none">
+                    <div class="btn-group-vertical h-50" role="group" aria-label="Graph control buttons">
+                        <button class="btn btn-new-orange text-new-secondary btn-sm" onclick="show_path()" id="one_path" type="button">Show path</button>
+                        <button class="btn btn-new-orange text-new-secondary btn-sm" onclick="show_all_paths()" id="all_paths" type="button">Show all paths</button>
+                        <button class="btn btn-new-orange text-new-secondary btn-sm" onclick="reset_graph()" id="all_paths" type="button">Reset graph</button>
+                        <button class="btn btn-new-orange text-new-secondary btn-sm" type="submit">Download!</button>
+                        <button class="btn btn-new-orange text-new-secondary btn-sm" formaction="{{ url_for('index') }}" onclick="clear_cookie('edges','/graph')" type="submit" id="go_back">Go back</button>
+                    </div>
+                </div>
+                <div class="d-none d-md-block">
+                    <div class="btn-group h-50" role="group" aria-label="Graph control buttons">
+                        <button class="btn btn-new-orange text-new-secondary btn-sm" onclick="show_path()" id="one_path" type="button">Show path</button>
+                        <button class="btn btn-new-orange text-new-secondary btn-sm" onclick="show_all_paths()" id="all_paths" type="button">Show all paths</button>
+                        <button class="btn btn-new-orange text-new-secondary btn-sm" onclick="reset_graph()" id="all_paths" type="button">Reset graph</button>
+                        <button class="btn btn-new-orange text-new-secondary btn-sm" type="submit">Download!</button>
+                        <button class="btn btn-new-orange text-new-secondary btn-sm" formaction="{{ url_for('index') }}" onclick="clear_cookie('edges','/graph')" type="submit" id="go_back">Go back</button>
+                    </div>
                 </div>
             </form>             
         </div>

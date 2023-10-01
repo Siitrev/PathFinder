@@ -8,9 +8,21 @@ input[type=number]{
 }
 .edges{
     overflow-x: hidden;
-    overflow-y: auto;
-    max-height: 40vh;
-    min-height: 40vh;
+    overflow-y: scroll;
+    scrollbar-color: #6e6155 #948272;
+    max-height: 20vh;
+    min-height: 20vh;
+}
+.edges::-webkit-scrollbar-track  {
+    background-color: #948272;
+}
+
+.edges::-webkit-scrollbar-thumb {
+    height: 30px;
+    background-color: #6e6155;
+}
+.edges::-webkit-scrollbar {
+    background-color: #948272;
 }
 .form-control::placeholder{
     color: #DADFE0;
@@ -21,4 +33,7 @@ input[type=number]{
 }
 .h-15{
     height: 15%;
+}
+.fs-sm{
+    font-size: smaller;
 }
