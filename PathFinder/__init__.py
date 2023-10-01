@@ -12,6 +12,7 @@ def create_app(test_config=None):
     # configure upload folder path and file size
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.secret_key = os.getenv("SECRET_KEY")
         
     try:
         os.makedirs(app.instance_path)

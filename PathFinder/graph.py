@@ -73,14 +73,13 @@ def show(name: str):
     return render_template("graph_show.html", graph_img=file_url, graph_name=name)
 
 # route that creates the graph
-@bp.route("/create/<name>", methods=("GET", "POST"))
+@bp.route("/create/<name>", methods=("POST",))
 def create(name):
     # check request method
     if request.method == "POST":
         # read data about edges
         tmp_edges = request.cookies.get("edges", None)
         edges = None
-        
         # refactor the data
         if tmp_edges:
             tmp_edges = tmp_edges[:-1]
