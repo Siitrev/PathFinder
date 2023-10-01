@@ -12,3 +12,5 @@ instance
 ./test.pickle
 PathFinder/static/node_modules
 PathFinder/static/scss
+PathFinder/static/package-lock.json
+PathFinder/static/package.json
