@@ -10,3 +10,5 @@ Spacefile
 .space
 instance
 ./test.pickle
+PathFinder/static/node_modules
+PathFinder/static/scss
